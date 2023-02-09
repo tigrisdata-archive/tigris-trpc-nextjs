@@ -4,28 +4,50 @@
  */
 import * as trpcNext from '@trpc/server/adapters/next';
 import { z } from 'zod';
+import Post from '~/db/models/post';
 import { publicProcedure, router } from '~/server/trpc';
+import { tigrisClient } from '~/utils/tigris';
+
+interface Message {
+  id: number;
+  message: string;
+}
 
 const appRouter = router({
-  greeting: publicProcedure
-    // This is the input schema of your procedure
-    // 💡 Tip: Try changing this and see type errors on the client straight away
+  post: publicProcedure
     .input(
       z.object({
-        name: z.string().nullish(),
+        name: z.string(),
+        text: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      console.log(input)
+      const posts = tigrisClient.getDatabase().getCollection<Post>(Post);
+      const post = await posts.insertOne({ name: input.name, text: input.text })
+      return post;
+    }),
+
+  like: publicProcedure
+    .input(
+      z.object({
+        id: z.bigint(),
       }),
     )
     .query(({ input }) => {
-      // This is what you're returning to your client
-      return {
-        text: `hello ${input?.name ?? 'world'}`,
-        // 💡 Tip: Try adding a new property here and see it propagate to the client straight-away
-      };
+      return input;
+    }),
+
+  getMessages: publicProcedure
+    .query(() => {
+      const posts = tigrisClient.getDatabase().getCollection<Post>(Post);
+      const cursor = posts.findMany();
+      return cursor.toArray();
     }),
   // 💡 Tip: Try adding a new procedure here and see if you can use it in the client!
-  // getUser: publicProcedure.query(() => {
-  //   return { id: '1', name: 'bob' };
-  // }),
+  getUser: publicProcedure.query(() => {
+    return { id: '1', name: '@leggetter' };
+  }),
 });
 
 // export only the type definition of the API

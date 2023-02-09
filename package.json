@@ -1,8 +1,9 @@
 {
-  "name": "@examples/next-minimal",
-  "version": "10.10.0",
+  "name": "tigris-trpc-nextjs",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
+    "setup": "ts-node ./scripts/setup.ts",
     "dev": "next dev",
     "build": "next build",
     "lint": "eslint --ext \".js,.ts,.tsx\" --report-unused-disable-directives src",
@@ -10,6 +11,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^4.3.8",
+    "@tigrisdata/core": "^1.0.0-beta.30",
     "@trpc/client": "^10.10.0",
     "@trpc/next": "^10.10.0",
     "@trpc/react-query": "^10.10.0",
@@ -17,13 +19,16 @@
     "next": "^13.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "reflect-metadata": "^0.1.13",
     "zod": "^3.0.0"
   },
   "devDependencies": {
+    "@next/env": "^13.1.6",
     "@types/node": "^18.7.20",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.5",
     "eslint": "^8.30.0",
+    "ts-node": "^10.9.1",
     "typescript": "^4.8.3"
   }
 }
