@@ -6,7 +6,7 @@ A relatively simple example demonstrating the following tech stack:
 
 - [Next.js](https://nextjs.org/) - web framework
 - [Tigris](https://www.tigrisdata.com) - database
-- [tRPC](https://trpc.io) - Remote Proceduce Call library that enable Type inference across client and server
+- [tRPC](https://trpc.io) - Remote Procedure Call library that enables Type inference across client and server
 
 ## Development
 
