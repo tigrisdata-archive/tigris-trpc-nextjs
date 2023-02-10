@@ -22,7 +22,6 @@ const appRouter = router({
       }),
     )
     .mutation(async ({ input }): Promise<Post> => {
-      console.log(input)
       const posts = tigrisClient.getDatabase().getCollection<Post>(Post);
       const post = await posts.insertOne({ name: input.name, text: input.text })
       return post;

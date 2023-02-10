@@ -12,9 +12,6 @@ export default function IndexPage() {
 
   const [message, setMessage] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
-
-  console.log(queryPosts.data);
-
   const [posts, setPosts] = useState<Post[]>(queryPosts.data as Post[]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -31,7 +28,6 @@ export default function IndexPage() {
     });
     setMessage("");
     setSubmitting(false);
-    console.log("handleSubmit");
 
     return false;
   };
