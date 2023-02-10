@@ -21,7 +21,7 @@ const appRouter = router({
         text: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input }): Promise<Post> => {
       console.log(input)
       const posts = tigrisClient.getDatabase().getCollection<Post>(Post);
       const post = await posts.insertOne({ name: input.name, text: input.text })
@@ -39,10 +39,14 @@ const appRouter = router({
     }),
 
   getMessages: publicProcedure
-    .query(() => {
-      const posts = tigrisClient.getDatabase().getCollection<Post>(Post);
-      const cursor = posts.findMany();
-      return cursor.toArray();
+    .query(async () => {
+      const postsCollection = tigrisClient.getDatabase().getCollection<Post>(Post);
+      const cursor = postsCollection.findMany();
+      const posts = await cursor.toArray();
+      return posts.sort((a, b) => {
+        const result = (new Date(b.createdAt!)).getTime() - (new Date(a.createdAt!)).getTime();
+        return result;
+      });
     }),
   // 💡 Tip: Try adding a new procedure here and see if you can use it in the client!
   getUser: publicProcedure.query(() => {

@@ -13,19 +13,27 @@ export default function IndexPage() {
   const [message, setMessage] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
 
+  console.log(queryPosts.data);
+
   const [posts, setPosts] = useState<Post[]>(queryPosts.data as Post[]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     setSubmitting(true);
-    const post = await submitMessageMutation.mutate({
+    const post: Post = (await submitMessageMutation.mutateAsync({
       name: user.data!.name,
       text: message,
+    })) as Post;
+
+    setPosts((prev: Post[]) => {
+      return [post, ...prev];
     });
-    // setPosts((prev) => [...prev, post]);
     setMessage("");
     setSubmitting(false);
     console.log("handleSubmit");
-    e.preventDefault();
+
+    return false;
   };
 
   if (!user.data) {
@@ -54,8 +62,15 @@ export default function IndexPage() {
         {posts.map((post) => {
           return (
             <div key={post.id}>
-              <span>{post.name}:</span>
-              <span>{post.text}</span>
+              <div>
+                <span>{post.name}:</span>
+                <span>{post.text}</span>
+              </div>
+              <div>
+                {post.createdAt
+                  ? new Date(post.createdAt).toISOString()
+                  : "no date set"}
+              </div>
             </div>
           );
         })}
