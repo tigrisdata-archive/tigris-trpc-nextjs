@@ -13,30 +13,36 @@ import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { DateTime } from "luxon";
 import Post from "~/db/models/post";
+import { getAvatarCharacter } from "~/utils/text-utils";
 
 export default function PostCard({ post }: { post: Post }) {
-  console.log(post);
+  const avatarChar = getAvatarCharacter(post.name);
 
   return (
-    <Card>
+    <Card variant="outlined">
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
+          <Avatar sx={{ bgcolor: red[500] }} aria-label="user">
+            {avatarChar}
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
+          <IconButton aria-label="additional actions">
             <MoreVertIcon />
           </IconButton>
         }
+        titleTypographyProps={{
+          variant: "body1",
+          fontWeight: 800,
+          component: "h3",
+        }}
         title={post.name}
         subheader={
           post.createdAt
             ? DateTime.fromISO(post.createdAt.toString()).toLocaleString(
                 DateTime.DATETIME_MED
               )
-            : "no date set"
+            : ""
         }
       />
       {/* <CardMedia
