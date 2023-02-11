@@ -1,7 +1,14 @@
-/**
- * This is a Next.js page.
- */
-import { FormEvent, FormEventHandler, useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  TextareaAutosize,
+  Typography,
+} from "@mui/material";
+import { FormEvent, FormEventHandler, useEffect, useState } from "react";
+import ResponsiveAppBar from "~/components/app-bar";
+import PostCard from "~/components/post-card";
 import Post from "~/db/models/post";
 import { trpc } from "../utils/trpc";
 
@@ -12,7 +19,11 @@ export default function IndexPage() {
 
   const [message, setMessage] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [posts, setPosts] = useState<Post[]>(queryPosts.data as Post[]);
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    setPosts(queryPosts.data as Post[]);
+  }, queryPosts.data);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,24 +43,24 @@ export default function IndexPage() {
     return false;
   };
 
-  if (!user.data) {
+  if (!user.data || !posts) {
     return (
-      <div style={styles.container}>
+      <Box>
         <h1>Loading...</h1>
-      </div>
+      </Box>
     );
   }
   return (
-    <div style={styles.container}>
-      <main style={styles.main as React.CSSProperties}>
-        <header>
-          <h1>NVG Social</h1>
-          <h2>Welcome, {user.data?.name}</h2>
-        </header>
+    <Box>
+      <ResponsiveAppBar username={user.data.name} />
+      <Container sx={{ width: 600, p: 0, mt: 5, mb: 5 }}>
+        <Typography variant="h4" component="h2">
+          Welcome, {user.data?.name}
+        </Typography>
 
-        <section>
-          <form style={styles.form} onSubmit={handleSubmit}>
-            <textarea
+        <Box id="middle" sx={{ padding: 0, mt: 5, mb: 5 }}>
+          <form onSubmit={handleSubmit}>
+            <TextareaAutosize
               id="message"
               onChange={(e) => setMessage(e.target.value)}
               readOnly={submitting}
@@ -57,60 +68,38 @@ export default function IndexPage() {
               style={styles.textArea as React.CSSProperties}
               required={true}
               placeholder="What's on your mind?"
-            ></textarea>
-            <div style={styles.actions}>
-              <input
+            ></TextareaAutosize>
+            <Box
+              id="actions"
+              sx={{ display: "flex", justifyContent: "flex-end" }}
+            >
+              <Button
+                variant="contained"
                 type="submit"
                 value="Post"
                 disabled={submitting}
-                style={styles.submitBtn}
-              />
-            </div>
+              >
+                Post
+              </Button>
+            </Box>
           </form>
-        </section>
+        </Box>
 
-        <section className="messages">
-          {posts.map((post) => {
-            return (
-              <div key={post.id} style={styles.post}>
-                <div style={styles.username}>{post.name}</div>
-                <div style={styles.postText}>{post.text}</div>
-                <div>
-                  <span style={styles.timestamp}>
-                    {post.createdAt
-                      ? new Date(post.createdAt).toISOString()
-                      : "no date set"}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </section>
-      </main>
-    </div>
+        <Box id="messages">
+          <Stack spacing={2}>
+            {posts.map((post) => {
+              return <PostCard post={post} />;
+            })}
+          </Stack>
+        </Box>
+      </Container>
+    </Box>
   );
 }
 
 const fontFamily =
   "ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color emoji";
 const styles = {
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    fontFamily: fontFamily,
-    fontSize: "16px",
-    width: "100%",
-  },
-
-  main: {
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column",
-    width: 400,
-  },
-
-  form: {},
-
   textArea: {
     fontFamily: fontFamily,
     width: "100%",
@@ -123,41 +112,5 @@ const styles = {
     outline: "none",
     boxShadow: "none",
     resize: "none",
-  },
-
-  actions: {
-    display: "flex",
-    justifyContent: "flex-end",
-    padding: "10px 0",
-    borderBottom: "1px solid #e5e7eb",
-  },
-
-  submitBtn: {
-    border: 0,
-    borderRadius: 10,
-    width: 75,
-    height: 30,
-    cursor: "pointer",
-  },
-
-  post: {
-    borderRadius: "20px",
-    backgroundColor: "#A6ECD9",
-    padding: 10,
-    margin: "10px 0",
-  },
-
-  postText: {
-    margin: "10px 0",
-  },
-
-  username: {
-    marginRight: 5,
-    fontWeight: 600,
-  },
-
-  timestamp: {
-    marginTop: 5,
-    fontSize: "0.5em",
   },
 };
