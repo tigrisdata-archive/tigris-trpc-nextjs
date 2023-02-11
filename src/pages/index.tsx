@@ -1,7 +1,9 @@
 /**
  * This is a Next.js page.
  */
+import { Stack } from "@mui/material";
 import { FormEvent, FormEventHandler, useState } from "react";
+import PostCard from "~/components/post-card";
 import Post from "~/db/models/post";
 import { trpc } from "../utils/trpc";
 
@@ -70,21 +72,11 @@ export default function IndexPage() {
         </section>
 
         <section className="messages">
-          {posts.map((post) => {
-            return (
-              <div key={post.id} style={styles.post}>
-                <div style={styles.username}>{post.name}</div>
-                <div style={styles.postText}>{post.text}</div>
-                <div>
-                  <span style={styles.timestamp}>
-                    {post.createdAt
-                      ? new Date(post.createdAt).toISOString()
-                      : "no date set"}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
+          <Stack spacing={2}>
+            {posts.map((post) => {
+              return <PostCard post={post} />;
+            })}
+          </Stack>
         </section>
       </main>
     </div>
