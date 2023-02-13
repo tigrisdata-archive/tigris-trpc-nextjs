@@ -9,8 +9,9 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
+import AirIcon from "@mui/icons-material/Air";
 import { getAvatarCharacter } from "~/utils/text-utils";
+import { MuiNextLink } from "./mui-next-link";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -36,25 +37,26 @@ function ResponsiveAppBar({ username }: { username: string }) {
           }}
           disableGutters
         >
-          <AdbIcon sx={{ display: { xs: "flex" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: "flex" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            NVG Social
-          </Typography>
+          <AirIcon sx={{ display: { xs: "flex" }, mr: 1 }} />
+          <Box flexGrow={1}>
+            <MuiNextLink href="/">
+              <Typography
+                variant="h5"
+                noWrap
+                sx={{
+                  ml: 2,
+                  mr: 2,
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: ".3rem",
+                  color: "white",
+                  textDecoration: "none",
+                }}
+              >
+                NVG Social
+              </Typography>
+            </MuiNextLink>
+          </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

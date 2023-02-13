@@ -2,18 +2,20 @@ import {
   Box,
   Button,
   Container,
-  Stack,
   TextareaAutosize,
   Typography,
 } from "@mui/material";
-import { FormEvent, FormEventHandler, useEffect, useState } from "react";
-import ResponsiveAppBar from "~/components/app-bar";
-import PostCard from "~/components/post-card";
+import { FormEvent, useEffect, useState } from "react";
+import { Layout } from "~/components/layout";
+import PostsList from "~/components/posts-list";
+
 import Post from "~/db/models/post";
+import User from "~/db/models/user";
 import { trpc } from "../utils/trpc";
 
 export default function IndexPage() {
-  const user = trpc.getUser.useQuery();
+  const userPayload = trpc.getUser.useQuery();
+  const user = userPayload.data as User;
   const queryPosts = trpc.getMessages.useQuery();
   const submitMessageMutation = trpc.post.useMutation();
 
@@ -30,7 +32,7 @@ export default function IndexPage() {
 
     setSubmitting(true);
     const post: Post = (await submitMessageMutation.mutateAsync({
-      name: user.data!.name,
+      name: user.username,
       text: message,
     })) as Post;
 
@@ -43,57 +45,49 @@ export default function IndexPage() {
     return false;
   };
 
-  if (!user.data || !posts) {
+  if (!userPayload.data || !posts) {
     return (
-      <Box>
+      <Container>
         <h1>Loading...</h1>
-      </Box>
+      </Container>
     );
   }
+
   return (
-    <Box>
-      <ResponsiveAppBar username={user.data.name} />
-      <Container sx={{ width: 600, p: 0, mt: 5, mb: 5 }}>
-        <Typography variant="h4" component="h2">
-          Welcome, {user.data?.name}
-        </Typography>
+    <Layout user={user}>
+      <Typography variant="h4" component="h2">
+        Welcome, {user.username}
+      </Typography>
 
-        <Box id="middle" sx={{ padding: 0, mt: 5, mb: 5 }}>
-          <form onSubmit={handleSubmit}>
-            <TextareaAutosize
-              id="message"
-              onChange={(e) => setMessage(e.target.value)}
-              readOnly={submitting}
-              value={message}
-              style={styles.textArea as React.CSSProperties}
-              required={true}
-              placeholder="What's on your mind?"
-            ></TextareaAutosize>
-            <Box
-              id="actions"
-              sx={{ display: "flex", justifyContent: "flex-end" }}
+      <Box id="middle" sx={{ padding: 0, mt: 5, mb: 5 }}>
+        <form onSubmit={handleSubmit}>
+          <TextareaAutosize
+            id="message"
+            onChange={(e) => setMessage(e.target.value)}
+            readOnly={submitting}
+            value={message}
+            style={styles.textArea as React.CSSProperties}
+            required={true}
+            placeholder="What's on your mind?"
+          ></TextareaAutosize>
+          <Box
+            id="actions"
+            sx={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            <Button
+              variant="contained"
+              type="submit"
+              value="Post"
+              disabled={submitting}
             >
-              <Button
-                variant="contained"
-                type="submit"
-                value="Post"
-                disabled={submitting}
-              >
-                Post
-              </Button>
-            </Box>
-          </form>
-        </Box>
+              Post
+            </Button>
+          </Box>
+        </form>
+      </Box>
 
-        <Box id="messages">
-          <Stack spacing={2}>
-            {posts.map((post) => {
-              return <PostCard post={post} />;
-            })}
-          </Stack>
-        </Box>
-      </Container>
-    </Box>
+      <PostsList posts={posts} />
+    </Layout>
   );
 }
 
