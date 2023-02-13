@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "preload-data": "npm run setup",
+    "load-data": "ts-node ./scripts/load-data.ts",
     "setup": "ts-node ./scripts/setup.ts",
     "predev": "npm run setup",
     "dev": "next dev",
