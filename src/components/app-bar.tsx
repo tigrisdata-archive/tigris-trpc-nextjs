@@ -27,7 +27,6 @@ function ResponsiveAppBar({ username }: { username: string }) {
   };
 
   const avatarChar = getAvatarCharacter(username);
-  console.log(username, avatarChar);
 
   return (
     <AppBar position="static">
