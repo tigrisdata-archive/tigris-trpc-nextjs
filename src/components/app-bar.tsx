@@ -9,7 +9,7 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
+import AirIcon from "@mui/icons-material/Air";
 import { getAvatarCharacter } from "~/utils/text-utils";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -36,7 +36,7 @@ function ResponsiveAppBar({ username }: { username: string }) {
           }}
           disableGutters
         >
-          <AdbIcon sx={{ display: { xs: "flex" }, mr: 1 }} />
+          <AirIcon sx={{ display: { xs: "flex" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
