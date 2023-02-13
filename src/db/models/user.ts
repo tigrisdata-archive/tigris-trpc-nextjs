@@ -5,19 +5,16 @@ import {
   TigrisDataTypes,
 } from "@tigrisdata/core";
 
-@TigrisCollection("posts")
-class Post {
+@TigrisCollection("users")
+class User {
   @PrimaryKey(TigrisDataTypes.INT64, { order: 1, autoGenerate: true })
   id?: string;
 
   @Field()
   username!: string;
 
-  @Field()
-  text!: string;
-
   @Field(TigrisDataTypes.DATE_TIME, { timestamp: "createdAt" })
   createdAt?: Date;
 }
 
-export default Post;
+export default User;

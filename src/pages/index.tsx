@@ -10,10 +10,12 @@ import { Layout } from "~/components/layout";
 import PostsList from "~/components/posts-list";
 
 import Post from "~/db/models/post";
+import User from "~/db/models/user";
 import { trpc } from "../utils/trpc";
 
 export default function IndexPage() {
-  const user = trpc.getUser.useQuery();
+  const userPayload = trpc.getUser.useQuery();
+  const user = userPayload.data as User;
   const queryPosts = trpc.getMessages.useQuery();
   const submitMessageMutation = trpc.post.useMutation();
 
@@ -30,7 +32,7 @@ export default function IndexPage() {
 
     setSubmitting(true);
     const post: Post = (await submitMessageMutation.mutateAsync({
-      name: user.data!.name,
+      name: user.username,
       text: message,
     })) as Post;
 
@@ -43,7 +45,7 @@ export default function IndexPage() {
     return false;
   };
 
-  if (!user.data || !posts) {
+  if (!userPayload.data || !posts) {
     return (
       <Container>
         <h1>Loading...</h1>
@@ -52,9 +54,9 @@ export default function IndexPage() {
   }
 
   return (
-    <Layout user={user.data}>
+    <Layout user={user}>
       <Typography variant="h4" component="h2">
-        Welcome, {user.data?.name}
+        Welcome, {user.username}
       </Typography>
 
       <Box id="middle" sx={{ padding: 0, mt: 5, mb: 5 }}>

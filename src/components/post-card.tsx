@@ -14,17 +14,23 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { DateTime } from "luxon";
 import Post from "~/db/models/post";
 import { getAvatarCharacter } from "~/utils/text-utils";
+import { MuiNextLink } from "./mui-next-link";
 
 export default function PostCard({ post }: { post: Post }) {
-  const avatarChar = getAvatarCharacter(post.name);
+  const avatarChar = getAvatarCharacter(post.username);
 
   return (
     <Card variant="outlined">
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="user">
-            {avatarChar}
-          </Avatar>
+          <MuiNextLink
+            style={{ textDecoration: "none" }}
+            href={`/${post.username}`}
+          >
+            <Avatar sx={{ bgcolor: red[500] }} aria-label="user">
+              {avatarChar}
+            </Avatar>
+          </MuiNextLink>
         }
         action={
           <IconButton aria-label="additional actions">
@@ -36,7 +42,14 @@ export default function PostCard({ post }: { post: Post }) {
           fontWeight: 800,
           component: "h3",
         }}
-        title={post.name}
+        title={
+          <MuiNextLink
+            style={{ textDecoration: "none", color: "black" }}
+            href={`/${post.username}`}
+          >
+            {post.username}
+          </MuiNextLink>
+        }
         subheader={
           post.createdAt
             ? DateTime.fromISO(post.createdAt.toString()).toLocaleString(
