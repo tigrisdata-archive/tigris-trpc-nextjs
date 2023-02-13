@@ -52,8 +52,6 @@ const appRouter = router({
 
       let cursor: Cursor<Post> | null = null
 
-      console.log('querying on', input)
-
       if (input?.username) {
         cursor = postsCollection.findMany({
           filter: {
