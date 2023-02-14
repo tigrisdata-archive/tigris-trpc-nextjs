@@ -2,7 +2,7 @@
  * This is the API-handler of your app that contains all your API routes.
  * On a bigger app, you will probably want to split this file up into multiple files.
  */
-import { Cursor } from '@tigrisdata/core';
+import { Cursor, Order } from '@tigrisdata/core';
 import * as trpcNext from '@trpc/server/adapters/next';
 import { z } from 'zod';
 import Post from '~/db/models/post';
@@ -56,17 +56,16 @@ const appRouter = router({
         cursor = postsCollection.findMany({
           filter: {
             username: input.username,
-          }
+          },
+          sort: { field: "createdAt", order: Order.DESC }
         });
       }
       else {
-        cursor = postsCollection.findMany();
+        cursor = postsCollection.findMany({
+          sort: { field: "createdAt", order: Order.DESC }
+        });
       }
-      const posts = await cursor.toArray();
-      return posts.sort((a, b) => {
-        const result = (new Date(b.createdAt!)).getTime() - (new Date(a.createdAt!)).getTime();
-        return result;
-      });
+      return await cursor.toArray();
     }),
   // 💡 Tip: Try adding a new procedure here and see if you can use it in the client!
   getUser: publicProcedure
