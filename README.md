@@ -1,12 +1,18 @@
-# WiP: Tigris + tRPC + Next.js
+# Tigris + tRPC + Next.js
 
-A relatively simple example demonstrating the following tech stack:
+An example demonstrating the following tech stack:
 
-## Tech stack
-
-- [Next.js](https://nextjs.org/) - web framework
-- [Tigris](https://www.tigrisdata.com) - database
+- [Next.js](https://nextjs.org/) - React-based web framework
+- [Tigris](https://www.tigrisdata.com) - database and search
 - [tRPC](https://trpc.io) - Remote Procedure Call library that enables Type inference across client and server
+
+And the following Tigris features:
+
+- [Database Inserts](https://www.tigrisdata.com/docs/sdkstools/typescript/database/insert/)
+- [Database Querying](https://www.tigrisdata.com/docs/sdkstools/typescript/database/query/)
+- [Database Query sorting](https://www.tigrisdata.com/docs/sdkstools/typescript/database/query/#sort)
+- [Database Query pagination](https://www.tigrisdata.com/docs/sdkstools/typescript/database/query/#pagination)
+- [Search](https://www.tigrisdata.com/docs/sdkstools/typescript/database/search/)
 
 ## Development
 
