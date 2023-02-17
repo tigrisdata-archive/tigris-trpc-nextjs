@@ -1,14 +1,12 @@
-/**
- * This is the API-handler of your app that contains all your API routes.
- * On a bigger app, you will probably want to split this file up into multiple files.
- */
-import { Cursor, Order } from '@tigrisdata/core';
 import * as trpcNext from '@trpc/server/adapters/next';
+import { publicProcedure, router } from '~/server/trpc';
+import { Cursor, FindQueryOptions, Order } from '@tigrisdata/core';
+import { tigrisClient } from '~/utils/tigris';
 import { z } from 'zod';
 import Post from '~/db/models/post';
 import User from '~/db/models/user';
-import { publicProcedure, router } from '~/server/trpc';
-import { tigrisClient } from '~/utils/tigris';
+
+const DEFAULT_PAGING_SIZE = 20;
 
 const defaultUser: User = {
   id: "1",
@@ -29,26 +27,18 @@ const appRouter = router({
       return post;
     }),
 
-  // like: publicProcedure
-  //   .input(
-  //     z.object({
-  //       id: z.bigint(),
-  //     }),
-  //   )
-  //   .query(({ input }) => {
-  //     return input;
-  //   }),
-
   getMessages: publicProcedure
     .input(
       z.object(
         {
-          username: z.string().optional()
+          username: z.string().optional(),
+          pageIndex: z.number()
         }
-      ).optional()
+      )
     )
     .query(async ({ input }) => {
-      const postsCollection = tigrisClient.getDatabase().getCollection<Post>(Post);
+      const db = tigrisClient.getDatabase();
+      const postsCollection = db.getCollection<Post>(Post);
 
       let cursor: Cursor<Post> | null = null
 
@@ -57,17 +47,22 @@ const appRouter = router({
           filter: {
             username: input.username,
           },
-          sort: { field: "createdAt", order: Order.DESC }
+          sort: { field: "createdAt", order: Order.DESC },
+          options: new FindQueryOptions(DEFAULT_PAGING_SIZE, input.pageIndex * DEFAULT_PAGING_SIZE),
         });
       }
       else {
         cursor = postsCollection.findMany({
-          sort: { field: "createdAt", order: Order.DESC }
+          sort: { field: "createdAt", order: Order.DESC },
+          options: new FindQueryOptions(DEFAULT_PAGING_SIZE, 30),
         });
       }
-      return await cursor.toArray();
+
+      const results = await cursor.toArray();
+      console.log(results[DEFAULT_PAGING_SIZE - 1])
+      return results;
     }),
-  // 💡 Tip: Try adding a new procedure here and see if you can use it in the client!
+
   getUser: publicProcedure
     .query(() => {
       return defaultUser;

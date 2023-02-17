@@ -1,12 +1,18 @@
+import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import {
+  BottomNavigation,
+  BottomNavigationAction,
   Box,
   Button,
   Container,
+  Paper,
   TextareaAutosize,
   Typography,
 } from "@mui/material";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
+import { BottomNav } from "~/components/bottom-nav";
 import { Layout } from "~/components/layout";
+import { Loading } from "~/components/loading";
 import PostsList from "~/components/posts-list";
 
 import Post from "~/db/models/post";
@@ -14,18 +20,22 @@ import User from "~/db/models/user";
 import { trpc } from "../utils/trpc";
 
 export default function IndexPage() {
-  const userPayload = trpc.getUser.useQuery();
-  const user = userPayload.data as User;
-  const queryPosts = trpc.getMessages.useQuery();
-  const submitMessageMutation = trpc.post.useMutation();
-
   const [message, setMessage] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [pageIndex, setPageIndex] = useState<number>(0);
+
+  const userPayload = trpc.getUser.useQuery();
+  const user = userPayload.data as User;
+  const queryPosts = trpc.getMessages.useQuery({ pageIndex });
+  const submitMessageMutation = trpc.post.useMutation();
+
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    setPosts(queryPosts.data as Post[]);
-  }, queryPosts.data);
+    if (queryPosts.isSuccess) {
+      setPosts(queryPosts.data as Post[]);
+    }
+  }, [queryPosts.data, pageIndex]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,12 +55,12 @@ export default function IndexPage() {
     return false;
   };
 
-  if (!userPayload.data || !posts) {
-    return (
-      <Container>
-        <h1>Loading...</h1>
-      </Container>
-    );
+  const handlePostsNavigation = (toIndex: number) => {
+    setPageIndex(toIndex);
+  };
+
+  if (!userPayload.data) {
+    return <Loading />;
   }
 
   return (
@@ -87,6 +97,10 @@ export default function IndexPage() {
       </Box>
 
       <PostsList posts={posts} />
+      <BottomNav
+        pageIndex={pageIndex}
+        handlePostsNavigation={handlePostsNavigation}
+      />
     </Layout>
   );
 }
