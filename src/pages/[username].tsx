@@ -13,7 +13,7 @@ import PostsList from "~/components/posts-list";
 import { Loading } from "~/components/loading";
 import { BottomNav } from "~/components/bottom-nav";
 
-export default function IndexPage() {
+export default function UsernamePage() {
   const router = useRouter();
   const userPayload = trpc.getUser.useQuery();
 

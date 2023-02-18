@@ -10,7 +10,7 @@ import Post from "~/db/models/post";
 import User from "~/db/models/user";
 import { trpc } from "../utils/trpc";
 
-export default function IndexPage() {
+export default function SearchPage() {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
