@@ -42,13 +42,21 @@ export default function IndexPage() {
     setPosts(queryPosts.data as Post[]);
   }, [queryPosts.data, pageIndex]);
 
-  if (!userPayload.data || !posts) {
+  if (!userPayload.data) {
     return <Loading />;
   }
 
   return (
     <Layout user={user}>
-      <PostsList posts={posts} />
+      <Typography variant="h4" component="h2" sx={{ padding: 0, mb: 5 }}>
+        Posts by {username}
+      </Typography>
+
+      {queryPosts.isSuccess && posts ? (
+        <PostsList posts={posts} />
+      ) : (
+        <Loading />
+      )}
       <BottomNav
         pageIndex={pageIndex}
         handlePostsNavigation={handlePostsNavigation}

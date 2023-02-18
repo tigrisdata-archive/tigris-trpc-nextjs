@@ -9,7 +9,6 @@ export const Loading = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        height: "100%",
         textAlign: "center",
       }}
     >

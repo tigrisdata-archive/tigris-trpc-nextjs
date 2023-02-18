@@ -13,6 +13,8 @@ const defaultUser: User = {
   username: "leggetter",
 };
 
+const postsCollection = tigrisClient.getDatabase().getCollection<Post>(Post);
+
 const appRouter = router({
   post: publicProcedure
     .input(
@@ -22,8 +24,7 @@ const appRouter = router({
       }),
     )
     .mutation(async ({ input }): Promise<Post> => {
-      const posts = tigrisClient.getDatabase().getCollection<Post>(Post);
-      const post = await posts.insertOne({ username: input.name, text: input.text })
+      const post = await postsCollection.insertOne({ username: input.name, text: input.text })
       return post;
     }),
 
@@ -37,9 +38,6 @@ const appRouter = router({
       )
     )
     .query(async ({ input }) => {
-      const db = tigrisClient.getDatabase();
-      const postsCollection = db.getCollection<Post>(Post);
-
       let cursor: Cursor<Post> | null = null
 
       if (input?.username) {
@@ -54,13 +52,31 @@ const appRouter = router({
       else {
         cursor = postsCollection.findMany({
           sort: { field: "createdAt", order: Order.DESC },
-          options: new FindQueryOptions(DEFAULT_PAGING_SIZE, 30),
+          options: new FindQueryOptions(DEFAULT_PAGING_SIZE, input.pageIndex * DEFAULT_PAGING_SIZE),
         });
       }
 
       const results = await cursor.toArray();
       console.log(results[DEFAULT_PAGING_SIZE - 1])
       return results;
+    }),
+
+  searchMessages: publicProcedure
+    .input(
+      z.object({
+        search: z.string(),
+        pageIndex: z.number()
+      })
+    )
+    .query(async ({ input }) => {
+      const results = await postsCollection.search({
+        q: input.search,
+        sort: { field: "createdAt", order: Order.DESC },
+        hitsPerPage: DEFAULT_PAGING_SIZE,
+      }, input.pageIndex + 1);
+
+      let posts: Post[] = results.hits.map(hit => hit.document);
+      return posts;
     }),
 
   getUser: publicProcedure

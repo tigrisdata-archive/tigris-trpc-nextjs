@@ -1,15 +1,5 @@
-import { ArrowLeft, ArrowRight } from "@mui/icons-material";
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Box,
-  Button,
-  Container,
-  Paper,
-  TextareaAutosize,
-  Typography,
-} from "@mui/material";
-import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
+import { Box, Button, TextareaAutosize, Typography } from "@mui/material";
+import { FormEvent, useEffect, useState } from "react";
 import { BottomNav } from "~/components/bottom-nav";
 import { Layout } from "~/components/layout";
 import { Loading } from "~/components/loading";
@@ -96,7 +86,11 @@ export default function IndexPage() {
         </form>
       </Box>
 
-      <PostsList posts={posts} />
+      {queryPosts.isSuccess && posts ? (
+        <PostsList posts={posts} />
+      ) : (
+        <Loading />
+      )}
       <BottomNav
         pageIndex={pageIndex}
         handlePostsNavigation={handlePostsNavigation}

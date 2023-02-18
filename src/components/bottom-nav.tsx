@@ -14,7 +14,6 @@ export const BottomNav = ({
     <Paper style={{ marginTop: 20 }} elevation={2}>
       <BottomNavigation
         showLabels
-        sx={{ width: 500 }}
         value={pageIndex}
         onChange={(_event, value) => handlePostsNavigation(value)}
       >
