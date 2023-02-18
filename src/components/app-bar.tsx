@@ -14,6 +14,7 @@ import { MuiNextLink } from "./mui-next-link";
 import { TextField } from "@mui/material";
 import { useState, FormEvent, MouseEvent, useEffect } from "react";
 import { useRouter } from "next/router";
+import CONFIG from "~/config";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -76,7 +77,7 @@ function ResponsiveAppBar({ username }: ResponsiveAppBarProps) {
                   textDecoration: "none",
                 }}
               >
-                NVG Social
+                {CONFIG.APP_NAME}
               </Typography>
             </MuiNextLink>
           </Box>
