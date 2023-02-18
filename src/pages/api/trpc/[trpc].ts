@@ -5,8 +5,7 @@ import { tigrisClient } from '~/utils/tigris';
 import { z } from 'zod';
 import Post from '~/db/models/post';
 import User from '~/db/models/user';
-
-const DEFAULT_PAGING_SIZE = 20;
+import CONFIG from "~/config";
 
 const defaultUser: User = {
   id: "1",
@@ -46,18 +45,18 @@ const appRouter = router({
             username: input.username,
           },
           sort: { field: "createdAt", order: Order.DESC },
-          options: new FindQueryOptions(DEFAULT_PAGING_SIZE, input.pageIndex * DEFAULT_PAGING_SIZE),
+          options: new FindQueryOptions(CONFIG.DEFAULT_PAGING_SIZE, input.pageIndex * CONFIG.DEFAULT_PAGING_SIZE),
         });
       }
       else {
         cursor = postsCollection.findMany({
           sort: { field: "createdAt", order: Order.DESC },
-          options: new FindQueryOptions(DEFAULT_PAGING_SIZE, input.pageIndex * DEFAULT_PAGING_SIZE),
+          options: new FindQueryOptions(CONFIG.DEFAULT_PAGING_SIZE, input.pageIndex * CONFIG.DEFAULT_PAGING_SIZE),
         });
       }
 
       const results = await cursor.toArray();
-      console.log(results[DEFAULT_PAGING_SIZE - 1])
+      console.log(results[CONFIG.DEFAULT_PAGING_SIZE - 1])
       return results;
     }),
 
@@ -72,7 +71,7 @@ const appRouter = router({
       const results = await postsCollection.search({
         q: input.search,
         sort: { field: "createdAt", order: Order.DESC },
-        hitsPerPage: DEFAULT_PAGING_SIZE,
+        hitsPerPage: CONFIG.DEFAULT_PAGING_SIZE,
       }, input.pageIndex + 1);
 
       let posts: Post[] = results.hits.map(hit => hit.document);

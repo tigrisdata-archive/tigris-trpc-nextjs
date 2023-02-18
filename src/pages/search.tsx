@@ -5,6 +5,7 @@ import { BottomNav } from "~/components/bottom-nav";
 import { Layout } from "~/components/layout";
 import { Loading } from "~/components/loading";
 import PostsList from "~/components/posts-list";
+import CONFIG from "~/config";
 
 import Post from "~/db/models/post";
 import User from "~/db/models/user";
@@ -49,9 +50,22 @@ export default function SearchPage() {
         Search results for {`"${searchQuery}"`}
       </Typography>
 
-      <PostsList posts={posts} />
+      {queryPosts.status === "loading" && <Loading />}
+
+      {queryPosts.status === "success" && posts.length === 0 && (
+        <Typography>No posts found for {`"${searchQuery}"`}</Typography>
+      )}
+
+      {queryPosts.status === "success" && posts.length > 0 && (
+        <PostsList posts={posts} />
+      )}
+
       <BottomNav
         pageIndex={pageIndex}
+        showNewerButton={pageIndex > 0}
+        showOlderButton={
+          posts.length > 0 && posts.length === CONFIG.DEFAULT_PAGING_SIZE
+        }
         handlePostsNavigation={handlePostsNavigation}
       />
     </Layout>

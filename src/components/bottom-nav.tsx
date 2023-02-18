@@ -3,13 +3,19 @@ import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 
 export type BottomNavProps = {
   pageIndex: number;
+  showOlderButton: boolean;
+  showNewerButton: boolean;
   handlePostsNavigation: (toIndex: number) => void;
 };
 
 export const BottomNav = ({
   pageIndex,
+  showNewerButton,
+  showOlderButton,
   handlePostsNavigation,
 }: BottomNavProps) => {
+  if (!showNewerButton && !showOlderButton) return <></>;
+
   return (
     <Paper style={{ marginTop: 20 }} elevation={2}>
       <BottomNavigation
@@ -17,18 +23,20 @@ export const BottomNav = ({
         value={pageIndex}
         onChange={(_event, value) => handlePostsNavigation(value)}
       >
-        {pageIndex > 0 && (
+        {showNewerButton && (
           <BottomNavigationAction
             label="Newer posts"
             value={pageIndex - 1}
             icon={<ArrowLeft />}
           />
         )}
-        <BottomNavigationAction
-          label="Older posts"
-          value={pageIndex + 1}
-          icon={<ArrowRight />}
-        />
+        {showOlderButton && (
+          <BottomNavigationAction
+            label="Older posts"
+            value={pageIndex + 1}
+            icon={<ArrowRight />}
+          />
+        )}
       </BottomNavigation>
     </Paper>
   );
