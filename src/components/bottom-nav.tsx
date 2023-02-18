@@ -11,7 +11,7 @@ export const BottomNav = ({
   handlePostsNavigation,
 }: BottomNavProps) => {
   return (
-    <Paper style={{ marginTop: 10 }} elevation={2}>
+    <Paper style={{ marginTop: 20 }} elevation={2}>
       <BottomNavigation
         showLabels
         sx={{ width: 500 }}

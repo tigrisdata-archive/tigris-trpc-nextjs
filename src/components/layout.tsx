@@ -17,7 +17,7 @@ export const Layout = (props: PropsWithChildren<LayoutProps>) => {
       </Head>
       <Box>
         <ResponsiveAppBar username={props.user.username} />
-        <Container sx={{ width: 600, p: 0, mt: 5, mb: 5 }}>
+        <Container sx={{ width: 600, p: 0, mt: 5, mb: 5, pb: 5 }}>
           {props.children}
         </Container>
       </Box>
