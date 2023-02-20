@@ -7,11 +7,14 @@ import Post from '~/db/models/post';
 import User from '~/db/models/user';
 import CONFIG from "~/config";
 
+// Since we're not implementing signup/login
+// default to using the first user returned
+// from the collection of Users
 let _defaultUser: User | undefined;
 const getDefaultUser = async (): Promise<User> => {
   if (_defaultUser !== null) {
     const usersCollection = tigrisClient.getDatabase().getCollection<User>(User);
-    _defaultUser = await usersCollection.findOne({ filter: { username: CONFIG.DEFAULT_USERNAME } });
+    _defaultUser = await usersCollection.findOne();
     if (!_defaultUser) {
       throw new Error("A default user was expected to be founded.")
     }
