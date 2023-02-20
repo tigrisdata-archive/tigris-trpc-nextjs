@@ -49,7 +49,31 @@ Create your Tigris project and Tigris application keys, and set environmental va
 
 An example `.env.development.local` is in the repo called `.env.development.local.example`.
 
+### Preload some data
+
+An app with no data is no fun!
+
+Run the following script to add some users to the database. Separate each username with a space character:
+
+```shell
+npm run add-users -- {username1} {username2} ... {usernameX}
+```
+
+For example, the following command will add four users to the database with the corresponding usernames:
+
+```shell
+npm run add-users -- leggetter ovaistariq adilansari GarrenSmith
+```
+
+Now, add some mock posts by running the following command:
+
+```shell
+npm run load-mock-data
+```
+
 ### Run the app
+
+With users and posts loaded, we can run the app:
 
 ```shell
 npm run dev
@@ -57,7 +81,7 @@ npm run dev
 
 ## Contribute 🙌
 
-Please do get involved! Issues and Pull Requests very much sought and appreciated.
+Please do get involved! Issues and Pull Requests are very much sought and appreciated.
 
 ## Code of Conduct
 

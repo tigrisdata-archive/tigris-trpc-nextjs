@@ -15,13 +15,14 @@ async function main() {
 
   const db = tigrisClient.getDatabase();
 
-  console.log("Loading users from JSON");
-  const usersJson = await fs.readFile(path.join(mockFilesDir, "users.json"), "utf-8");
-  const users = JSON.parse(usersJson) as User[];
-
+  console.log("Gettings users from Users collection");
   const usersCollection = db.getCollection<User>(User);
-  await usersCollection.insertMany(users);
-  console.log('Inserted users');
+  const users = await usersCollection.findMany().toArray();
+  if (users.length == 0) {
+    console.error(`Please add one or more users to the database using
+    "npm run add-users -- {username} {username} ... {username}"`);
+    process.exit(1);
+  }
 
   const mockFiles = (await fs.readdir(mockFilesDir)).filter(x => x.startsWith("socials"));
   const postCollection = tigrisClient.getDatabase().getCollection<Post>(Post);

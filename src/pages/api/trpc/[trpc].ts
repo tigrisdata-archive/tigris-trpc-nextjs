@@ -10,8 +10,8 @@ import CONFIG from "~/config";
 let _defaultUser: User | undefined;
 const getDefaultUser = async (): Promise<User> => {
   if (_defaultUser !== null) {
-    const usersCollection = await tigrisClient.getDatabase().getCollection<User>(User);
-    _defaultUser = await usersCollection.findOne({ filter: { username: "leggetter" } });
+    const usersCollection = tigrisClient.getDatabase().getCollection<User>(User);
+    _defaultUser = await usersCollection.findOne({ filter: { username: CONFIG.DEFAULT_USERNAME } });
     if (!_defaultUser) {
       throw new Error("A default user was expected to be founded.")
     }
