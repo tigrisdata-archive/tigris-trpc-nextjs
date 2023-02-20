@@ -1,6 +1,6 @@
 import * as trpcNext from '@trpc/server/adapters/next';
 import { publicProcedure, router } from '~/server/trpc';
-import { Cursor, FindQueryOptions, Order } from '@tigrisdata/core';
+import { type Cursor, FindQueryOptions, Order } from '@tigrisdata/core';
 import { tigrisClient } from '~/utils/tigris';
 import { z } from 'zod';
 import Post from '~/db/models/post';
@@ -10,14 +10,15 @@ import CONFIG from "~/config";
 // Since we're not implementing signup/login
 // default to using the first user returned
 // from the collection of Users
-let _defaultUser: User | undefined;
+let _defaultUser: User;
 const getDefaultUser = async (): Promise<User> => {
-  if (_defaultUser !== null) {
+  if (_defaultUser !== undefined) {
     const usersCollection = tigrisClient.getDatabase().getCollection<User>(User);
-    _defaultUser = await usersCollection.findOne();
-    if (!_defaultUser) {
+    const user = await usersCollection.findOne();
+    if (user === undefined) {
       throw new Error("A default user was expected to be founded.")
     }
+    _defaultUser = user;
   }
   return _defaultUser;
 }
@@ -29,7 +30,7 @@ const appRouter = router({
     .input(
       z.object({
         text: z.string(),
-      }),
+      })
     )
     .mutation(async ({ input }): Promise<Post> => {
       const defaultUser = await getDefaultUser();
@@ -42,14 +43,14 @@ const appRouter = router({
       z.object(
         {
           username: z.string().optional(),
-          pageIndex: z.number()
+          pageIndex: z.number(),
         }
       )
     )
     .query(async ({ input }) => {
       let cursor: Cursor<Post> | null = null
 
-      if (input?.username) {
+      if (input?.username === undefined) {
         cursor = postsCollection.findMany({
           filter: {
             username: input.username,
@@ -74,7 +75,7 @@ const appRouter = router({
     .input(
       z.object({
         search: z.string(),
-        pageIndex: z.number()
+        pageIndex: z.number(),
       })
     )
     .query(async ({ input }) => {
@@ -84,7 +85,7 @@ const appRouter = router({
         hitsPerPage: CONFIG.DEFAULT_PAGING_SIZE,
       }, input.pageIndex + 1);
 
-      let posts: Post[] = results.hits.map(hit => hit.document);
+      const posts: Post[] = results.hits.map(hit => hit.document);
       return posts;
     }),
 

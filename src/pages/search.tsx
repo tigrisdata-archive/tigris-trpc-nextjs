@@ -1,17 +1,17 @@
 import { Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BottomNav } from "~/components/bottom-nav";
 import { Layout } from "~/components/layout";
 import { Loading } from "~/components/loading";
 import PostsList from "~/components/posts-list";
 import CONFIG from "~/config";
 
-import Post from "~/db/models/post";
-import User from "~/db/models/user";
+import type Post from "~/db/models/post";
+import type User from "~/db/models/user";
 import { trpc } from "../utils/trpc";
 
-export default function SearchPage() {
+export default function SearchPage(): JSX.Element {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
@@ -36,11 +36,11 @@ export default function SearchPage() {
     }
   }, [queryPosts.data, pageIndex, searchQuery]);
 
-  const handlePostsNavigation = (toIndex: number) => {
+  const handlePostsNavigation = (toIndex: number): void => {
     setPageIndex(toIndex);
   };
 
-  if (!userPayload.data) {
+  if (userPayload.data == null) {
     return <Loading />;
   }
 

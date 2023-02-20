@@ -1,16 +1,16 @@
 import { Box, Button, TextareaAutosize, Typography } from "@mui/material";
-import { FormEvent, useEffect, useState } from "react";
+import React, { type FormEvent, useEffect, useState } from "react";
 import { BottomNav } from "~/components/bottom-nav";
 import { Layout } from "~/components/layout";
 import { Loading } from "~/components/loading";
 import PostsList from "~/components/posts-list";
 import CONFIG from "~/config";
 
-import Post from "~/db/models/post";
-import User from "~/db/models/user";
+import type Post from "~/db/models/post";
+import type User from "~/db/models/user";
 import { trpc } from "../utils/trpc";
 
-export default function IndexPage() {
+export default function IndexPage(): JSX.Element {
   const [message, setMessage] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [pageIndex, setPageIndex] = useState<number>(0);
@@ -28,7 +28,7 @@ export default function IndexPage() {
     }
   }, [queryPosts.data, pageIndex]);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     setSubmitting(true);
@@ -41,15 +41,13 @@ export default function IndexPage() {
     });
     setMessage("");
     setSubmitting(false);
-
-    return false;
   };
 
-  const handlePostsNavigation = (toIndex: number) => {
+  const handlePostsNavigation = (toIndex: number): void => {
     setPageIndex(toIndex);
   };
 
-  if (!userPayload.data) {
+  if (userPayload.data === undefined) {
     return <Loading />;
   }
 
@@ -60,10 +58,13 @@ export default function IndexPage() {
       </Typography>
 
       <Box id="middle" sx={{ padding: 0, mt: 5, mb: 5 }}>
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <form onSubmit={handleSubmit}>
           <TextareaAutosize
             id="message"
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => {
+              setMessage(e.target.value);
+            }}
             readOnly={submitting}
             value={message}
             style={styles.textArea as React.CSSProperties}
@@ -106,7 +107,7 @@ const fontFamily =
   "ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color emoji";
 const styles = {
   textArea: {
-    fontFamily: fontFamily,
+    fontFamily,
     width: "100%",
     height: 22 * 4,
     fontSize: "16px",

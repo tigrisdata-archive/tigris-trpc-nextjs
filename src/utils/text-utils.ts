@@ -1,4 +1,4 @@
-export const getAvatarCharacter = (text: string) => {
+export const getAvatarCharacter = (text: string): string => {
   const avatarCharMatch = /[a-zA-Z]/.exec(text);
-  return (avatarCharMatch ? avatarCharMatch[0] : "n").toUpperCase();
+  return (avatarCharMatch !== null ? avatarCharMatch[0] : "n").toUpperCase();
 }
