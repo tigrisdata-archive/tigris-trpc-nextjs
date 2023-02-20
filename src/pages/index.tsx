@@ -33,7 +33,6 @@ export default function IndexPage() {
 
     setSubmitting(true);
     const post: Post = (await submitMessageMutation.mutateAsync({
-      name: user.username,
       text: message,
     })) as Post;
 
@@ -109,9 +108,9 @@ const styles = {
   textArea: {
     fontFamily: fontFamily,
     width: "100%",
-    height: 18 * 5,
+    height: 22 * 4,
     fontSize: "16px",
-    lineHeight: "18px",
+    lineHeight: "22px",
     border: "none",
     borderBottom: "1px solid #e5e7eb",
     overflow: "auto",

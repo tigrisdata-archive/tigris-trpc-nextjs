@@ -7,10 +7,17 @@ import Post from '~/db/models/post';
 import User from '~/db/models/user';
 import CONFIG from "~/config";
 
-const defaultUser: User = {
-  id: "1",
-  username: "leggetter",
-};
+let _defaultUser: User | undefined;
+const getDefaultUser = async (): Promise<User> => {
+  if (_defaultUser !== null) {
+    const usersCollection = await tigrisClient.getDatabase().getCollection<User>(User);
+    _defaultUser = await usersCollection.findOne({ filter: { username: "leggetter" } });
+    if (!_defaultUser) {
+      throw new Error("A default user was expected to be founded.")
+    }
+  }
+  return _defaultUser;
+}
 
 const postsCollection = tigrisClient.getDatabase().getCollection<Post>(Post);
 
@@ -18,12 +25,12 @@ const appRouter = router({
   post: publicProcedure
     .input(
       z.object({
-        name: z.string(),
         text: z.string(),
       }),
     )
     .mutation(async ({ input }): Promise<Post> => {
-      const post = await postsCollection.insertOne({ username: input.name, text: input.text })
+      const defaultUser = await getDefaultUser();
+      const post = await postsCollection.insertOne({ username: defaultUser.username, text: input.text })
       return post;
     }),
 
@@ -79,8 +86,8 @@ const appRouter = router({
     }),
 
   getUser: publicProcedure
-    .query(() => {
-      return defaultUser;
+    .query(async () => {
+      return await getDefaultUser();
     }),
 });
 
