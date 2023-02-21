@@ -1,3 +1,5 @@
+/* eslint-disable import/first */
+// Import order required for tigrisClient as env vars need to be set
 import * as fs from "node:fs/promises"
 import path from "node:path";
 
@@ -10,7 +12,7 @@ import User from "../src/db/models/user";
 
 const BATCH_SIZE = 200;
 
-async function main() {
+async function main(): Promise<void> {
   const mockFilesDir = path.join(__dirname, "..", "mock-data");
 
   const db = tigrisClient.getDatabase();
@@ -18,7 +20,7 @@ async function main() {
   console.log("Gettings users from Users collection");
   const usersCollection = db.getCollection<User>(User);
   const users = await usersCollection.findMany().toArray();
-  if (users.length == 0) {
+  if (users.length === 0) {
     console.error(`Please add one or more users to the database using
     "npm run add-users -- {username} {username} ... {username}"`);
     process.exit(1);
@@ -28,7 +30,7 @@ async function main() {
   const postCollection = tigrisClient.getDatabase().getCollection<Post>(Post);
   for (let i = 0; i < mockFiles.length; ++i) {
     console.log(`Reading mock file ${i + 1} of ${mockFiles.length}`);
-    let json = await fs.readFile(path.join(mockFilesDir, mockFiles[i]), "utf-8");
+    const json = await fs.readFile(path.join(mockFilesDir, mockFiles[i]), "utf-8");
 
     let posts: Post[] = JSON.parse(json);
     posts = posts.map((post) => {
