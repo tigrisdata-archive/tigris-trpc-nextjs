@@ -12,32 +12,39 @@ import AirIcon from "@mui/icons-material/Air";
 import { getAvatarCharacter } from "~/utils/text-utils";
 import { MuiNextLink } from "./mui-next-link";
 import { TextField } from "@mui/material";
-import { useState, FormEvent, MouseEvent, useEffect } from "react";
+import React, {
+  useState,
+  type FormEvent,
+  type MouseEvent,
+  useEffect,
+} from "react";
 import { useRouter } from "next/router";
 import CONFIG from "~/config";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-export type ResponsiveAppBarProps = {
+export interface ResponsiveAppBarProps {
   username: string;
-};
+}
 
-function ResponsiveAppBar({ username }: ResponsiveAppBarProps) {
+function ResponsiveAppBar({ username }: ResponsiveAppBarProps): JSX.Element {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
+  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget);
   };
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (): void => {
     setAnchorElUser(null);
   };
 
   const router = useRouter();
   const [searchText, setSearchText] = useState<string>("");
-  const _handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const _handleSearchSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const path = `/search?q=${encodeURIComponent(searchText)}`;
     console.log(path);
-    router.push(path);
+    router.push(path).catch((err) => {
+      console.error(err);
+    });
   };
 
   useEffect(() => {
@@ -46,7 +53,7 @@ function ResponsiveAppBar({ username }: ResponsiveAppBarProps) {
 
   const _handleSearchTextChange = (
     event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  ): void => {
     setSearchText(event.target.value);
   };
 
