@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 
-import Post from "~/db/models/post";
-import User from "~/db/models/user";
+import type Post from "~/db/models/post";
+import type User from "~/db/models/user";
 
-import { Container, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
 import { Layout } from "~/components/layout";
 import PostsList from "~/components/posts-list";
@@ -14,7 +14,7 @@ import { Loading } from "~/components/loading";
 import { BottomNav } from "~/components/bottom-nav";
 import CONFIG from "~/config";
 
-export default function UsernamePage() {
+export default function UsernamePage(): JSX.Element {
   const router = useRouter();
   const userPayload = trpc.getUser.useQuery();
 
@@ -28,7 +28,7 @@ export default function UsernamePage() {
     pageIndex,
   });
 
-  const handlePostsNavigation = (toIndex: number) => {
+  const handlePostsNavigation = (toIndex: number): void => {
     setPageIndex(toIndex);
   };
 
@@ -38,7 +38,7 @@ export default function UsernamePage() {
     }
   }, [queryPosts.data, pageIndex]);
 
-  if (!userPayload.data) {
+  if (userPayload.data === undefined) {
     return <Loading />;
   }
 
