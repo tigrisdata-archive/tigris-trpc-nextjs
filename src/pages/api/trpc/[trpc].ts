@@ -1,9 +1,7 @@
 import * as trpcNext from '@trpc/server/adapters/next';
 import { publicProcedure, router } from '~/server/trpc';
-import { type Cursor, FindQueryOptions, Order } from '@tigrisdata/core';
 import { tigrisClient } from '~/utils/tigris';
 import { z } from 'zod';
-import Post from '~/db/models/post';
 import User from '~/db/models/user';
 import CONFIG from "~/config";
 
@@ -23,20 +21,7 @@ const getDefaultUser = async (): Promise<User> => {
   return _defaultUser;
 }
 
-const postsCollection = tigrisClient.getDatabase().getCollection<Post>(Post);
-
 const appRouter = router({
-  getMessages: publicProcedure
-    .query(async () => {
-      const cursor: Cursor<Post> = postsCollection.findMany({
-        sort: { field: "createdAt", order: Order.DESC },
-        options: new FindQueryOptions(CONFIG.DEFAULT_PAGING_SIZE, 0),
-      });
-
-      const results = await cursor.toArray();
-      return results;
-    }),
-
   getUser: publicProcedure
     .query(async () => {
       return await getDefaultUser();
