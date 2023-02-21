@@ -10,7 +10,15 @@ export default function PostsList({ posts }: { posts: Post[] }): JSX.Element {
         {posts.length === 0 && <Typography>No posts yet!</Typography>}
         {posts.length > 0 &&
           posts.map((post) => {
-            return <PostCard key={post.id} post={post} />;
+            return (
+              <PostCard
+                key={post.id}
+                username={post.username}
+                text={post.text}
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                createdAt={post.createdAt!}
+              />
+            );
           })}
       </Stack>
     </Box>
