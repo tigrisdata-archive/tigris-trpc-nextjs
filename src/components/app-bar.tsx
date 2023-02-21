@@ -11,43 +11,22 @@ import MenuItem from "@mui/material/MenuItem";
 import AirIcon from "@mui/icons-material/Air";
 import { getAvatarCharacter } from "~/utils/text-utils";
 import { MuiNextLink } from "./mui-next-link";
-import { TextField } from "@mui/material";
-import { useState, FormEvent, MouseEvent, useEffect } from "react";
-import { useRouter } from "next/router";
+import React, { useState, type MouseEvent } from "react";
 import CONFIG from "~/config";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-export type ResponsiveAppBarProps = {
+export interface ResponsiveAppBarProps {
   username: string;
-};
+}
 
-function ResponsiveAppBar({ username }: ResponsiveAppBarProps) {
+function ResponsiveAppBar({ username }: ResponsiveAppBarProps): JSX.Element {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
+  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget);
   };
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (): void => {
     setAnchorElUser(null);
-  };
-
-  const router = useRouter();
-  const [searchText, setSearchText] = useState<string>("");
-  const _handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const path = `/search?q=${encodeURIComponent(searchText)}`;
-    console.log(path);
-    router.push(path);
-  };
-
-  useEffect(() => {
-    setSearchText(router.query.q as string);
-  }, [router.query.q]);
-
-  const _handleSearchTextChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSearchText(event.target.value);
   };
 
   const avatarChar = getAvatarCharacter(username);
@@ -86,22 +65,9 @@ function ResponsiveAppBar({ username }: ResponsiveAppBarProps) {
             display="flex"
             flexDirection="row"
             flexGrow={1}
-            justifyContent="space-between"
+            justifyContent="flex-end"
             ml={10}
           >
-            <Box>
-              <form onSubmit={_handleSearchSubmit}>
-                <TextField
-                  id="filled-basic"
-                  label="Search"
-                  variant="filled"
-                  sx={{ backgroundColor: "#ffffff", minWidth: 300 }}
-                  onChange={_handleSearchTextChange}
-                  value={searchText}
-                />
-              </form>
-            </Box>
-
             <Box sx={{ flexGrow: 0, alignSelf: "center" }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
