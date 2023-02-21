@@ -5,7 +5,7 @@ import { tigrisClient } from "../src/utils/tigris"
 import Post from "../src/db/models/post";
 import User from "../src/db/models/user";
 
-async function main() {
+async function main(): Promise<void> {
   // ensure branch exists, create it if it needs to be created dynamically
   await tigrisClient.getDatabase().initializeBranch();
   // register schemas
