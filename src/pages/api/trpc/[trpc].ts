@@ -12,7 +12,7 @@ import CONFIG from "~/config";
 // from the collection of Users
 let _defaultUser: User;
 const getDefaultUser = async (): Promise<User> => {
-  if (_defaultUser !== undefined) {
+  if (_defaultUser === undefined) {
     const usersCollection = tigrisClient.getDatabase().getCollection<User>(User);
     const user = await usersCollection.findOne();
     if (user === undefined) {
