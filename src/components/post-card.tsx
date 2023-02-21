@@ -11,21 +11,27 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { DateTime } from "luxon";
-import type Post from "~/db/models/post";
 import { getAvatarCharacter } from "~/utils/text-utils";
 import { MuiNextLink } from "./mui-next-link";
 
-export default function PostCard({ post }: { post: Post }): JSX.Element {
-  const avatarChar = getAvatarCharacter(post.username);
+export interface PostCardProps {
+  username: string;
+  text: string;
+  createdAt: Date;
+}
+
+export default function PostCard({
+  username,
+  text,
+  createdAt,
+}: PostCardProps): JSX.Element {
+  const avatarChar = getAvatarCharacter(username);
 
   return (
     <Card variant="outlined">
       <CardHeader
         avatar={
-          <MuiNextLink
-            style={{ textDecoration: "none" }}
-            href={`/${post.username}`}
-          >
+          <MuiNextLink style={{ textDecoration: "none" }} href={`/${username}`}>
             <Avatar sx={{ bgcolor: red[500] }} aria-label="user">
               {avatarChar}
             </Avatar>
@@ -44,22 +50,18 @@ export default function PostCard({ post }: { post: Post }): JSX.Element {
         title={
           <MuiNextLink
             style={{ textDecoration: "none", color: "black" }}
-            href={`/${post.username}`}
+            href={`/${username}`}
           >
-            {post.username}
+            {username}
           </MuiNextLink>
         }
-        subheader={
-          post.createdAt !== undefined
-            ? DateTime.fromISO(post.createdAt.toString()).toLocaleString(
-                DateTime.DATETIME_MED
-              )
-            : ""
-        }
+        subheader={DateTime.fromISO(createdAt.toString()).toLocaleString(
+          DateTime.DATETIME_MED
+        )}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          {post.text}
+          {text}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
