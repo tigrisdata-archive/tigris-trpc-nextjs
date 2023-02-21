@@ -26,18 +26,6 @@ const getDefaultUser = async (): Promise<User> => {
 const postsCollection = tigrisClient.getDatabase().getCollection<Post>(Post);
 
 const appRouter = router({
-  post: publicProcedure
-    .input(
-      z.object({
-        text: z.string(),
-      })
-    )
-    .mutation(async ({ input }): Promise<Post> => {
-      const defaultUser = await getDefaultUser();
-      const post = await postsCollection.insertOne({ username: defaultUser.username, text: input.text })
-      return post;
-    }),
-
   getMessages: publicProcedure
     .input(
       z.object(
