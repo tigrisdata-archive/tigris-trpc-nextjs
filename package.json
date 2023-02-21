@@ -7,8 +7,6 @@
     "add-users": "ts-node ./scripts/add-users.ts",
     "preload-mock-data": "npm run setup",
     "load-mock-data": "ts-node ./scripts/load-mock-data.ts",
-    "setup": "ts-node ./scripts/setup.ts",
-    "predev": "npm run setup",
     "dev": "next dev",
     "build": "next build",
     "lint": "eslint --ext \".js,.ts,.tsx\" --report-unused-disable-directives src",
