@@ -5,7 +5,7 @@
   <a href="https://opensource.org/licenses/MIT"><img alt="LICENSE" src="https://img.shields.io/badge/licence-MIT-orange?style=for-the-badge"></a>
 </p>
 
-# Tigris + tRPC + Next.js
+# Tigris Database and Search + tRPC + Next.js
 
 An example demonstrating the following tech stack:
 
