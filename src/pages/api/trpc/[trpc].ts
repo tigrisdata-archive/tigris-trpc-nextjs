@@ -42,51 +42,18 @@ const appRouter = router({
     .input(
       z.object(
         {
-          username: z.string().optional(),
           pageIndex: z.number(),
         }
       )
     )
     .query(async ({ input }) => {
-      let cursor: Cursor<Post> | null = null
-
-      if (input?.username === undefined) {
-        cursor = postsCollection.findMany({
-          filter: {
-            username: input.username,
-          },
-          sort: { field: "createdAt", order: Order.DESC },
-          options: new FindQueryOptions(CONFIG.DEFAULT_PAGING_SIZE, input.pageIndex * CONFIG.DEFAULT_PAGING_SIZE),
-        });
-      }
-      else {
-        cursor = postsCollection.findMany({
-          sort: { field: "createdAt", order: Order.DESC },
-          options: new FindQueryOptions(CONFIG.DEFAULT_PAGING_SIZE, input.pageIndex * CONFIG.DEFAULT_PAGING_SIZE),
-        });
-      }
+      const cursor: Cursor<Post> = postsCollection.findMany({
+        sort: { field: "createdAt", order: Order.DESC },
+        options: new FindQueryOptions(CONFIG.DEFAULT_PAGING_SIZE, input.pageIndex * CONFIG.DEFAULT_PAGING_SIZE),
+      });
 
       const results = await cursor.toArray();
-      console.log(results[CONFIG.DEFAULT_PAGING_SIZE - 1])
       return results;
-    }),
-
-  searchMessages: publicProcedure
-    .input(
-      z.object({
-        search: z.string(),
-        pageIndex: z.number(),
-      })
-    )
-    .query(async ({ input }) => {
-      const results = await postsCollection.search({
-        q: input.search,
-        sort: { field: "createdAt", order: Order.DESC },
-        hitsPerPage: CONFIG.DEFAULT_PAGING_SIZE,
-      }, input.pageIndex + 1);
-
-      const posts: Post[] = results.hits.map(hit => hit.document);
-      return posts;
     }),
 
   getUser: publicProcedure
