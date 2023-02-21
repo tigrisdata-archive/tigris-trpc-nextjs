@@ -2,7 +2,7 @@ import { httpBatchLink } from '@trpc/client';
 import { createTRPCNext } from '@trpc/next';
 import type { AppRouter } from '../pages/api/trpc/[trpc]';
 
-function getBaseUrl() {
+function getBaseUrl(): string {
   if (typeof window !== 'undefined') {
     // In the browser, we return a relative URL
     return '';
@@ -10,7 +10,7 @@ function getBaseUrl() {
   // When rendering on the server, we return an absolute URL
 
   // reference for vercel.com
-  if (process.env.VERCEL_URL) {
+  if (process.env.VERCEL_URL !== undefined) {
     return `https://${process.env.VERCEL_URL}`;
   }
 
