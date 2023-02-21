@@ -1,19 +1,20 @@
+import React from "react";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 
-export type BottomNavProps = {
+export interface BottomNavProps {
   pageIndex: number;
   showOlderButton: boolean;
   showNewerButton: boolean;
   handlePostsNavigation: (toIndex: number) => void;
-};
+}
 
 export const BottomNav = ({
   pageIndex,
   showNewerButton,
   showOlderButton,
   handlePostsNavigation,
-}: BottomNavProps) => {
+}: BottomNavProps): JSX.Element => {
   if (!showNewerButton && !showOlderButton) return <></>;
 
   return (
@@ -21,7 +22,9 @@ export const BottomNav = ({
       <BottomNavigation
         showLabels
         value={pageIndex}
-        onChange={(_event, value) => handlePostsNavigation(value)}
+        onChange={(_event, value) => {
+          handlePostsNavigation(value);
+        }}
       >
         {showNewerButton && (
           <BottomNavigationAction
