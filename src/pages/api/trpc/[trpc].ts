@@ -27,17 +27,10 @@ const postsCollection = tigrisClient.getDatabase().getCollection<Post>(Post);
 
 const appRouter = router({
   getMessages: publicProcedure
-    .input(
-      z.object(
-        {
-          pageIndex: z.number(),
-        }
-      )
-    )
-    .query(async ({ input }) => {
+    .query(async () => {
       const cursor: Cursor<Post> = postsCollection.findMany({
         sort: { field: "createdAt", order: Order.DESC },
-        options: new FindQueryOptions(CONFIG.DEFAULT_PAGING_SIZE, input.pageIndex * CONFIG.DEFAULT_PAGING_SIZE),
+        options: new FindQueryOptions(CONFIG.DEFAULT_PAGING_SIZE, 0),
       });
 
       const results = await cursor.toArray();
