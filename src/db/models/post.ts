@@ -16,7 +16,7 @@ class Post {
   @Field()
   text!: string;
 
-  @Field(TigrisDataTypes.DATE_TIME, { timestamp: "createdAt" })
+  @Field({ timestamp: "createdAt" })
   createdAt?: Date;
 }
 

@@ -1,5 +1,5 @@
-import { Box, Button, TextareaAutosize, Typography } from "@mui/material";
 import React, { type FormEvent, useEffect, useState } from "react";
+import { Box, Button, TextareaAutosize, Typography } from "@mui/material";
 import { BottomNav } from "~/components/bottom-nav";
 import { Layout } from "~/components/layout";
 import { Loading } from "~/components/loading";
@@ -52,7 +52,7 @@ export default function IndexPage(): JSX.Element {
   }
 
   return (
-    <Layout user={user}>
+    <Layout username={user.username}>
       <Typography variant="h4" component="h2">
         Welcome, {user.username}
       </Typography>
