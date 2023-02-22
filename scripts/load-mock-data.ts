@@ -1,20 +1,19 @@
-/* eslint-disable import/first */
-// Import order required for tigrisClient as env vars need to be set
 import * as fs from "node:fs/promises"
 import path from "node:path";
 
-import { loadEnvConfig } from "@next/env";
-loadEnvConfig(process.cwd(), process.env.NODE_ENV !== "production")
-
-import { tigrisClient } from "../src/utils/tigris"
+import { Tigris } from "@tigrisdata/core";
 import Post from "../src/db/models/post";
 import User from "../src/db/models/user";
+
+import { loadEnvConfig } from "@next/env";
+loadEnvConfig(process.cwd(), process.env.NODE_ENV !== "production")
 
 const BATCH_SIZE = 200;
 
 async function main(): Promise<void> {
   const mockFilesDir = path.join(__dirname, "..", "mock-data");
 
+  const tigrisClient = new Tigris();
   const db = tigrisClient.getDatabase();
 
   console.log("Gettings users from Users collection");
@@ -37,10 +36,13 @@ async function main(): Promise<void> {
       post.username = users[Math.floor(Math.random() * users.length)].username;
       return post;
     })
+
+    const insertions: Array<Promise<Post[]>> = [];
     while (posts.length > 0) {
       const insert = posts.splice(0, BATCH_SIZE);
-      await postCollection.insertMany(insert);
+      insertions.push(postCollection.insertMany(insert));
     }
+    await Promise.all(insertions);
   }
 }
 
