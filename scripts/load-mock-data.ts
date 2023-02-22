@@ -36,10 +36,13 @@ async function main(): Promise<void> {
       post.username = users[Math.floor(Math.random() * users.length)].username;
       return post;
     })
+
+    const insertions: Array<Promise<Post[]>> = [];
     while (posts.length > 0) {
       const insert = posts.splice(0, BATCH_SIZE);
-      await postCollection.insertMany(insert);
+      insertions.push(postCollection.insertMany(insert));
     }
+    await Promise.all(insertions);
   }
 }
 
