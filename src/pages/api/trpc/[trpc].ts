@@ -50,7 +50,7 @@ const appRouter = router({
     .query(async ({ input }) => {
       let cursor: Cursor<Post> | null = null
 
-      if (input?.username === undefined) {
+      if (input?.username !== undefined) {
         cursor = postsCollection.findMany({
           filter: {
             username: input.username,

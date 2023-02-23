@@ -55,7 +55,7 @@ export default function PostCard({
             {username}
           </MuiNextLink>
         }
-        subheader={DateTime.fromISO(createdAt.toString()).toLocaleString(
+        subheader={DateTime.fromISO(createdAt.toISOString()).toLocaleString(
           DateTime.DATETIME_MED
         )}
       />

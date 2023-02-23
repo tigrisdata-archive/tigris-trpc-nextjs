@@ -15,8 +15,15 @@ export default function PostsList({ posts }: { posts: Post[] }): JSX.Element {
                 key={post.id}
                 username={post.username}
                 text={post.text}
+                // Once https://github.com/tigrisdata/tigris-client-ts/issues/245
+                // is resolved we can remove the `undefined` check and replaced with
+                // createdAt={post.createdAt!}. Then, the following eslint comment will be required:
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                createdAt={post.createdAt!}
+                createdAt={
+                  post.createdAt !== undefined
+                    ? new Date(post.createdAt)
+                    : new Date()
+                }
               />
             );
           })}

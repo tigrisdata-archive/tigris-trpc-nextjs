@@ -45,7 +45,7 @@ export default function SearchPage(): JSX.Element {
   }
 
   return (
-    <Layout user={user}>
+    <Layout username={user.username}>
       <Typography variant="h4" component="h2" sx={{ padding: 0, mb: 5 }}>
         Search results for {`"${searchQuery}"`}
       </Typography>
