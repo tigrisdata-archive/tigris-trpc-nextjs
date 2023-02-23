@@ -7,11 +7,12 @@ import { trpc } from "../utils/trpc";
 
 export default function IndexPage(): JSX.Element {
   const userPayload = trpc.getUser.useQuery();
-  const user = userPayload.data as { username: string };
 
   if (userPayload.data === undefined) {
     return <Loading />;
   }
+
+  const user = userPayload.data as { username: string };
 
   return (
     <Layout username={user.username}>
