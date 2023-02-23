@@ -15,8 +15,11 @@ export default function PostsList({ posts }: { posts: Post[] }): JSX.Element {
                 key={post.id}
                 username={post.username}
                 text={post.text}
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                createdAt={post.createdAt!}
+                createdAt={
+                  post.createdAt !== undefined
+                    ? new Date(post.createdAt)
+                    : new Date()
+                }
               />
             );
           })}
