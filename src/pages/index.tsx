@@ -9,7 +9,6 @@ import PostsList from "~/components/posts-list";
 
 export default function IndexPage(): JSX.Element {
   const userPayload = trpc.getUser.useQuery();
-  const user = userPayload.data as { username: string };
   const queryPosts = trpc.getMessages.useQuery();
 
   const [posts, setPosts] = useState<Post[]>([]);
@@ -17,6 +16,8 @@ export default function IndexPage(): JSX.Element {
   if (userPayload.data === undefined) {
     return <Loading />;
   }
+
+  const user = userPayload.data as { username: string };
 
   useEffect(() => {
     if (queryPosts.status === "success") {
