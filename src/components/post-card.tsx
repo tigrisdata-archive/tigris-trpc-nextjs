@@ -45,7 +45,7 @@ export default function PostCard({
           component: "h3",
         }}
         title={username}
-        subheader={DateTime.fromISO(createdAt.toString()).toLocaleString(
+        subheader={DateTime.fromISO(createdAt.toISOString()).toLocaleString(
           DateTime.DATETIME_MED
         )}
       />
