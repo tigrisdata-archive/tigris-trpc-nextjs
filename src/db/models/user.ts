@@ -1,6 +1,7 @@
 import {
   Field,
   PrimaryKey,
+  // SearchField,
   TigrisCollection,
   TigrisDataTypes,
 } from "@tigrisdata/core";
@@ -11,9 +12,11 @@ class User {
   id?: string;
 
   @Field()
+  // @SearchField()
   username!: string;
 
   @Field(TigrisDataTypes.DATE_TIME, { timestamp: "createdAt" })
+  // @SearchField({ sort: true })
   createdAt?: Date;
 }
 

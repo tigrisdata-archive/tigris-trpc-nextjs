@@ -1,6 +1,7 @@
 import {
   Field,
   PrimaryKey,
+  SearchField,
   TigrisCollection,
   TigrisDataTypes,
 } from "@tigrisdata/core";
@@ -11,12 +12,15 @@ class Post {
   id?: string;
 
   @Field()
+  @SearchField()
   username!: string;
 
   @Field()
+  @SearchField()
   text!: string;
 
   @Field({ timestamp: "createdAt" })
+  @SearchField({ sort: true })
   createdAt?: Date;
 }
 
